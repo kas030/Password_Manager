@@ -14,8 +14,6 @@ class PmMainWindow(QMainWindow):
 
         self.pm_menu_bar = PmMenuBar(self)
 
-        self.setStatusBar(QStatusBar(self))
-
 
 if __name__ == "__main__":
     app = QApplication([])
