@@ -1,5 +1,4 @@
-from PySide6.QtWidgets import QApplication, QMainWindow, QStatusBar
-from PySide6.QtCore import QSize
+from PySide6.QtWidgets import QApplication, QMainWindow
 
 from pm_menu_bar import PmMenuBar
 
@@ -10,7 +9,7 @@ class PmMainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Password Manager")
 
-        self.setFixedSize(QSize(800, 600))
+        self.setFixedSize(800, 600)
 
         self.pm_menu_bar = PmMenuBar(self)
 

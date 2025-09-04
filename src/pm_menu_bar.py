@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QMenuBar
 from PySide6.QtGui import QAction, QKeySequence
 from PySide6.QtCore import Slot
+import new_db_dialog
 
 
 class PmMenuBar:
@@ -68,7 +69,8 @@ class PmMenuBar:
 
     @Slot()
     def new_file(self):
-        print("新建")
+        dialog = new_db_dialog.NewDBDialog(self.main_window)
+        dialog.exec()
 
     @Slot()
     def open_file(self):
