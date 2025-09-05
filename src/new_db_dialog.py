@@ -74,6 +74,9 @@ class NewDBDialog(QDialog):
         if not self._check_password_validity():
             return
 
+        if not self._confirm_overwrite():
+            return
+
         self.accept()
 
     def _check_file_path_validity(self) -> bool:
@@ -113,6 +116,35 @@ class NewDBDialog(QDialog):
         if password != confirm_password:
             QMessageBox.warning(self, "密码不匹配", "两次输入的密码不一致。")
             return False
+
+        return True
+
+    def _confirm_overwrite(self) -> bool:
+        path = self.location_line_edit.text().strip()
+
+        # 如果文件存在，询问用户是否覆盖
+        if os.path.exists(path):
+            reply = QMessageBox.question(
+                self,
+                "确认覆盖",
+                f"文件 '{path}' 已存在。是否覆盖？\n注意，覆盖后文件内容将无法恢复。",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No,
+            )
+            # 用户取消操作
+            if reply == QMessageBox.StandardButton.No:
+                return False
+            # 尝试删除文件
+            else:
+                try:
+                    os.remove(path)
+                except Exception as e:
+                    QMessageBox.critical(
+                        self,
+                        "错误",
+                        f"无法覆盖文件 '{path}'。\n错误信息：{str(e)}",
+                    )
+                    return False
 
         return True
 
