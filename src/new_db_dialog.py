@@ -1,7 +1,16 @@
 import os
 
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QLabel, QHBoxLayout, QLineEdit, QVBoxLayout, QPushButton, \
-    QFileDialog, QGridLayout
+from PySide6.QtWidgets import (
+    QDialog,
+    QDialogButtonBox,
+    QLabel,
+    QHBoxLayout,
+    QLineEdit,
+    QVBoxLayout,
+    QPushButton,
+    QFileDialog,
+    QGridLayout,
+)
 
 
 class NewDBDialog(QDialog):
@@ -14,7 +23,7 @@ class NewDBDialog(QDialog):
         self.buttonBox = QDialogButtonBox()
         self.buttonBox.addButton(QDialogButtonBox.StandardButton.Ok)
         self.buttonBox.addButton(QDialogButtonBox.StandardButton.Cancel)
-        self.buttonBox.accepted.connect(self.on_ok_clicked)
+        self.buttonBox.accepted.connect(self._on_ok_clicked)
         self.buttonBox.rejected.connect(self.reject)
 
         # 添加“选择文件位置”输入框、“浏览”按钮
@@ -24,7 +33,7 @@ class NewDBDialog(QDialog):
         self.location_line_edit = QLineEdit()
         self.location_label.setBuddy(self.location_line_edit)
         self.location_browse_btn = QPushButton("浏览(&B)…")
-        self.location_browse_btn.clicked.connect(self.on_browse_clicked)
+        self.location_browse_btn.clicked.connect(self._on_browse_clicked)
 
         location_layout.addWidget(self.location_label)
         location_layout.addWidget(self.location_line_edit)
@@ -57,17 +66,19 @@ class NewDBDialog(QDialog):
 
         self.setMinimumWidth(400)
 
-    def on_ok_clicked(self):
-        print("新建密码数据库: ", self.location_line_edit.text())
+    def _on_ok_clicked(self):
+
         self.accept()
 
-    def on_browse_clicked(self):
-        file_description = "Text Files"
-        file_extension = ".txt"
+    def _on_browse_clicked(self):
+        file_description = "数据库文件"
+        file_extension = ".db"
         file_filter = file_description + " (*" + file_extension + ")"
 
         default_path = os.path.expanduser("~/Documents/")
 
-        file_path, _ = QFileDialog.getSaveFileName(self, "选择文件位置", default_path, file_filter)
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, "选择文件位置", default_path, file_filter
+        )
 
         self.location_line_edit.setText(file_path)
