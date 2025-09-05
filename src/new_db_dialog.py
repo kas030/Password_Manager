@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QFileDialog,
     QGridLayout,
+    QMessageBox,
 )
 
 
@@ -67,8 +68,53 @@ class NewDBDialog(QDialog):
         self.setMinimumWidth(400)
 
     def _on_ok_clicked(self):
+        if not self._check_file_path_validity():
+            return
+
+        if not self._check_password_validity():
+            return
 
         self.accept()
+
+    def _check_file_path_validity(self) -> bool:
+        path = self.location_line_edit.text().strip()
+
+        # 检查路径是否为空
+        if not path:
+            QMessageBox.warning(self, "无效路径", "文件路径不能为空。")
+            return False
+
+        # 检查路径是否存在
+        dir_path = os.path.dirname(path)
+        if not os.path.exists(dir_path):
+            QMessageBox.warning(self, "无效路径", "文件目录不存在。")
+            return False
+
+        # 检查文件名是否合法
+        file_name = os.path.basename(path)
+        invalid_chars = r'<>:"/\|?*'
+        if not file_name or any(char in file_name for char in invalid_chars):
+            QMessageBox.warning(
+                self, "无效文件名", "文件名不能包含下列任何字符：\n" + invalid_chars
+            )
+            return False
+
+        return True
+
+    def _check_password_validity(self) -> bool:
+        # 检查密码是否为空
+        password = self.password_line_edit.text()
+        if not password:
+            QMessageBox.warning(self, "无效密码", "密码不能为空。")
+            return False
+
+        # 检查密码和确认密码是否匹配
+        confirm_password = self.confirm_password_line_edit.text()
+        if password != confirm_password:
+            QMessageBox.warning(self, "密码不匹配", "两次输入的密码不一致。")
+            return False
+
+        return True
 
     def _on_browse_clicked(self):
         file_description = "数据库文件"
